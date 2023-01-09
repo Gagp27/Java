@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title th:text="'CRM - ' + ${title}"></title>
+        <link rel="stylesheet" href="/css/tailwind.min.css">
+    </head>
+    <body class="min-h-100 bg-gray-200">
+    <div class="md:flex min-h-screen md:align-top">
+        <aside class="md:w-2/5 lg:w-2/5 xl:w-1/5 bg-teal-600 px-5 py-10">
+            <h1 class="uppercase text-white tracking-wide text-2xl  font-bold mt-2">CRM - IndexedDB</h1>
+            <p class="mt-10 text-white">Administra tus Clientes con el CRM - IndexedDB</p>
+            <nav class="mt-8">
+                <a href="/" class="px-3 py-1 text-white block hover:bg-teal-700 hover:text-yellow-400 bg-teal-700">Clientes</a>
+                <a href="/customer/new" class="px-3 py-1 text-white block hover:bg-teal-900 mt-2 hover:text-yellow-400">Nuevo Cliente</a>
+            </nav>
+        </aside>
+
+        <main class="md:w-3/5  xl:w-4/5 px-5 py-10 bg-gray-200">
+            <h2 class="text-3xl font-light text-center" th:text="${title}"></h2>
+            <p th:if="${customers.isEmpty()}" th:text="'No hay Clientes'" class="text-center text-gray-600 mt-10"></p>
+
+            <div th:if="not ${customers.isEmpty()}" class="flex flex-col mt-10">
+                <div class="py-2 overflow-x-auto">
+                    <div class="align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
+                        <table class="min-w-full text-center">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="px-6 py-3 border-b border-gray-200 text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">
+                                        Cliente
+                                    </th>
+                                    <th class="px-6 py-3 border-b border-gray-200 text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">
+                                        Teléfono
+                                    </th>
+                                    <th class="px-6 py-3 border-b border-gray-200 text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">
+                                        Empresa
+                                    </th>
+                                    <th class="px-6 py-3 border-b border-gray-200 text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">
+                                        Logo
+                                    </th>
+                                    <th class="px-6 py-3 border-b border-gray-200 text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">
+                                        Acciones
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="bg-white">
+                                <tr th:each="customer : ${customers}">
+                                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                        <p th:text="${customer.name}" class="text-sm leading-5 font-medium text-gray-700 text-lg  font-bold"></p>
+                                        <p th:text="${customer.email}" class="text-sm leading-10 text-gray-700"></p>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 ">
+                                        <p th:text="${customer.phone}" class="text-gray-700"></p>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200  leading-5 text-gray-700">
+                                        <p th:text="${customer.company}" class="text-gray-600"></p>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200  leading-5 text-gray-700">
+                                        <img th:if="not ${customer.image == ''}" class="h-16 mx-auto" th:src="'/uploads/' + ${customer.image}" alt="Logo">
+                                        <p class="text-center" th:if="${customer.image == ''}" th:text="'No hay Logo'"></p>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm leading-5">
+                                        <a th:href="'/customer/update/' + ${customer.id}" class="text-teal-600 hover:text-teal-900 mr-5 cursor-pointer">Editar</a>
+                                        <button th:id="${customer.id}" th:data-name="${customer.name}" th:data-email="${customer.email}" class="text-red-600 hover:text-red-900 cursor-pointer" onclick="{(confirm(`Desea eliminar el usuario ${this.dataset.name}, con el email ${this.dataset.email}`) ? window.location.href = `/customer/delete/${this.id}` : '')}">Eliminar</button>
+                                    </td>
+                            </tr>
+                        </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    </body>
+</html>
